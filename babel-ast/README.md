@@ -236,5 +236,3 @@ BinaryExpression(path) {
   }
 ```
 
-## 实战
-使用@mock进行测试
