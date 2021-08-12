@@ -87,7 +87,7 @@ function square(n) {
 
 ### visitor
 
-<img src="D:\personal\babel-brochure\img\3.jpg" style="zoom:100%; float:left;" />
+<img src="../img/3.jpg" style="zoom:100%; float:left;" />
 <div style="clear:both;"/>
 
 
