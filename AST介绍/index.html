@@ -1,0 +1,442 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>AST介绍 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../babel-ast/" />
+    
+    
+    <link rel="prev" href="../babel介绍/" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    前言
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../babel介绍/">
+            
+                <a href="../babel介绍/">
+            
+                    
+                    babel介绍
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    AST介绍
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../babel-ast/">
+            
+                <a href="../babel-ast/">
+            
+                    
+                    使用babel操作AST
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../action/">
+            
+                <a href="../action/">
+            
+                    
+                    实战
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../附/">
+            
+                <a href="../附/">
+            
+                    
+                    附
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >AST介绍</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="ast&#x4ECB;&#x7ECD;">AST&#x4ECB;&#x7ECD;</h1>
+<h2 id="abstract-syntax-tree">Abstract Syntax Tree</h2>
+<p>&#x53EF;&#x4EE5;&#x7B80;&#x5355;&#x7406;&#x89E3;&#x4E3A;&#x63CF;&#x8FF0;&#x4EE3;&#x7801;&#x7684;&#x5BF9;&#x8C61;&#x3002;
+&#x4E00;&#x5207;&#x4E8B;&#x7269;&#x90FD;&#x53EF;&#x4EE5;&#x8F6C;&#x4E3A;key-value&#x7684;&#x5BF9;&#x8C61;&#x7ED3;&#x6784;&#xFF0C;&#x6BD4;&#x5982;&#x63CF;&#x8FF0;&#x6D4F;&#x89C8;&#x5668;&#x7684;BOM&#x3001;&#x6587;&#x6863;&#x7684;DOM&#x3001;&#x865A;&#x62DF;DOM
+&#x6BD4;&#x5982;&#x8981;&#x63CF;&#x8FF0;<code>const a = 1</code>&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x521B;&#x9020;&#x8FD9;&#x6837;&#x7684;&#x6570;&#x636E;&#x7ED3;&#x6784;&#xFF1A;</p>
+<pre><code>{
+    type:&quot;declaration&quot;,
+    kind:&quot;const&quot;,
+    declarator:&quot;a&quot;,
+    init:1
+}
+</code></pre><h2 id="&#x8D77;&#x6E90;">&#x8D77;&#x6E90;</h2>
+<p>&#x82E5;&#x5E72;&#x5E74;&#x524D;&#xFF0C;Mozilla&#x7684;&#x4E00;&#x4E2A;&#x5DE5;&#x7A0B;&#x5E08;&#xFF0C;&#x521B;&#x5EFA;&#x4E86;&#x4E00;&#x4E2A;API&#xFF0C;&#x80FD;&#x591F;&#x5C06;Firefox SpiderMonkey&#x5F15;&#x64CE;&#x7684; js &#x89E3;&#x6790;&#x5668;&#x66B4;&#x9732;&#x4E3A;JS API&#x3002;</p>
+<p>&#x8FD9;&#x4E2A;&#x89E3;&#x6790;&#x5668;&#x7684;&#x8F93;&#x51FA;&#x683C;&#x5F0F;&#x6210;&#x4E3A;&#x4E86;&#x4E00;&#x79CD;&#x901A;&#x7528;&#x683C;&#x5F0F;&#x6D41;&#x884C;&#x8D77;&#x6765;&#xFF0C;&#x6210;&#x4E3A;&#x64CD;&#x4F5C;JS&#x6E90;&#x4EE3;&#x7801;&#x7684;&#x4E00;&#x4E2A;&#x5DE5;&#x5177;&#x3002;</p>
+<h2 id="&#x6807;&#x51C6;">&#x6807;&#x51C6;</h2>
+<p> ESTree &#x6307;&#x5BFC;&#x59D4;&#x5458;&#x4F1A;&#xFF1A;&#x7531;eslint&#x3001;acorn&#x3001;babel&#x7684;&#x51E0;&#x4E2A;&#x6210;&#x5458;&#x7EC4;&#x6210;
+<a href="https://github.com/estree/estree" target="_blank">estree</a></p>
+<h2 id="demo">DEMO</h2>
+<p><code>const a = 1</code>&#x7684;AST&#x6458;&#x8981;&#xFF1A;</p>
+<pre><code>&quot;program&quot;: {
+    &quot;type&quot;: &quot;Program&quot;,
+    &quot;start&quot;: 0,
+    &quot;end&quot;: 25,
+    &quot;loc&quot;: {
+      &quot;start&quot;: {
+        &quot;line&quot;: 1,
+        &quot;column&quot;: 0
+      },
+      &quot;end&quot;: {
+        &quot;line&quot;: 14,
+        &quot;column&quot;: 0
+      }
+    },
+    &quot;sourceType&quot;: &quot;module&quot;,
+    &quot;interpreter&quot;: null,
+    &quot;body&quot;: [
+      {
+        &quot;type&quot;: &quot;VariableDeclaration&quot;,
+        &quot;start&quot;: 0,
+        &quot;end&quot;: 12,
+        &quot;loc&quot;: {
+          &quot;start&quot;: {
+            &quot;line&quot;: 1,
+            &quot;column&quot;: 0
+          },
+          &quot;end&quot;: {
+            &quot;line&quot;: 1,
+            &quot;column&quot;: 12
+          }
+        },
+        &quot;declarations&quot;: [
+          {
+            &quot;type&quot;: &quot;VariableDeclarator&quot;,
+            &quot;start&quot;: 6,
+            &quot;end&quot;: 11,
+            &quot;loc&quot;: {
+              &quot;start&quot;: {
+                &quot;line&quot;: 1,
+                &quot;column&quot;: 6
+              },
+              &quot;end&quot;: {
+                &quot;line&quot;: 1,
+                &quot;column&quot;: 11
+              }
+            },
+            &quot;id&quot;: {
+              &quot;type&quot;: &quot;Identifier&quot;,
+              &quot;start&quot;: 6,
+              &quot;end&quot;: 7,
+              &quot;loc&quot;: {
+                &quot;start&quot;: {
+                  &quot;line&quot;: 1,
+                  &quot;column&quot;: 6
+                },
+                &quot;end&quot;: {
+                  &quot;line&quot;: 1,
+                  &quot;column&quot;: 7
+                },
+                &quot;identifierName&quot;: &quot;a&quot;
+              },
+              &quot;name&quot;: &quot;a&quot;
+            },
+            &quot;init&quot;: {
+              &quot;type&quot;: &quot;NumericLiteral&quot;,
+              &quot;start&quot;: 10,
+              &quot;end&quot;: 11,
+              &quot;loc&quot;: {
+                &quot;start&quot;: {
+                  &quot;line&quot;: 1,
+                  &quot;column&quot;: 10
+                },
+                &quot;end&quot;: {
+                  &quot;line&quot;: 1,
+                  &quot;column&quot;: 11
+                }
+              },
+              &quot;extra&quot;: {
+                &quot;rawValue&quot;: 1,
+                &quot;raw&quot;: &quot;1&quot;
+              },
+              &quot;value&quot;: 1
+            }
+          }
+        ],
+        &quot;kind&quot;: &quot;const&quot;
+      }
+    ],
+    &quot;directives&quot;: []
+  }
+</code></pre><h2 id="&#x5DE5;&#x5177;">&#x5DE5;&#x5177;</h2>
+<p><a href="https://astexplorer.net/" target="_blank">ast&#x5728;&#x7EBF;&#x8F6C;&#x6362;&#xFF1A;https://astexplorer.net/</a></p>
+<h2 id="ast&#x751F;&#x6210;&#x8FC7;&#x7A0B;">AST&#x751F;&#x6210;&#x8FC7;&#x7A0B;</h2>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/5cb2c784cc5842833331f4aef28619da.png" alt="AST&#x751F;&#x6210;&#x8FC7;&#x7A0B;"></p>
+<h3 id="&#x8BCD;&#x6CD5;&#x5206;&#x6790;">&#x8BCD;&#x6CD5;&#x5206;&#x6790;</h3>
+<p>&#x7F16;&#x8BD1;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x9636;&#x6BB5;&#x662F;&#x626B;&#x63CF;&#x6E90;&#x4EE3;&#x7801;&#x6587;&#x672C;&#xFF0C;scanner&#x4F1A;&#x4ECE;&#x5DE6;&#x5230;&#x53F3;&#x626B;&#x63CF;&#x6587;&#x672C;&#xFF0C;&#x628A;&#x6587;&#x672C;&#x62C6;&#x6210;&#x4E00;&#x4E9B;&#x5355;&#x8BCD;&#x3002;&#x7136;&#x540E;&#xFF0C;&#x8FD9;&#x4E9B;&#x5355;&#x8BCD;&#x4F20;&#x5165;&#x5206;&#x8BCD;&#x5668;&#xFF0C;&#x7ECF;&#x8FC7;&#x4E00;&#x7CFB;&#x5217;&#x7684;&#x8BC6;&#x522B;&#x5668;&#xFF08;&#x5173;&#x952E;&#x5B57;&#x8BC6;&#x522B;&#x5668;&#x3001;&#x6807;&#x8BC6;&#x7B26;&#x8BC6;&#x522B;&#x5668;&#x3001;&#x5E38;&#x91CF;&#x8BC6;&#x522B;&#x5668;&#x3001;&#x64CD;&#x4F5C;&#x7B26;&#x8BC6;&#x522B;&#x5668;&#x7B49;&#xFF09;&#xFF0C;&#x786E;&#x5B9A;&#x8FD9;&#x4E9B;&#x5355;&#x8BCD;&#x7684;&#x8BCD;&#x6027;&#xFF0C;&#x8FD9;&#x4E00;&#x8FC7;&#x7A0B;&#x7684;&#x4EA7;&#x7269;&#x662F;token&#x5E8F;&#x5217;&#x3002;token&#x5728;&#x673A;&#x5185;&#x4E00;&#x822C;&#x7528;<type, value="">&#x5F62;&#x4F3C;&#x7684;&#x4E8C;&#x5143;&#x7EC4;&#x6765;&#x8868;&#x793A;&#xFF0C;type&#x8868;&#x793A;&#x4E00;&#x4E2A;&#x5355;&#x8BCD;&#x79CD;&#x7C7B;&#xFF0C;value&#x4E3A;&#x5C5E;&#x6027;&#x503C;&#xFF0C;&#x6BD4;&#x5982;var&#x8FD9;&#x4E2A;&#x5355;&#x8BCD;&#xFF0C;&#x5728;js&#x8BED;&#x8A00;&#x91CC;&#x662F;&#x4E00;&#x4E2A;&#x5173;&#x952E;&#x5B57;&#xFF0C;&#x4E00;&#x79CD;&#x8BED;&#x8A00;&#x7684;&#x5173;&#x952E;&#x5B57;&#x96C6;&#x5408;&#x662F;&#x4E8B;&#x5148;&#x53EF;&#x4EE5;&#x786E;&#x5B9A;&#x7684;&#xFF0C;&#x6240;&#x4EE5;&#x5B83;&#x7684;type&#x672C;&#x8EAB;&#x5C31;&#x53EF;&#x8868;&#x793A;&#x8FD9;&#x4E2A;&#x5173;&#x952E;&#x5B57;&#xFF0C;&#x4E0D;&#x518D;&#x9700;&#x8981;&#x5C5E;&#x6027;&#x503C;&#xFF0C; &#x7528;&#x4E8C;&#x5143;&#x7EC4;&#x8868;&#x793A;&#x5C31;&#x662F;<var, -="">&#xFF1B;</var,></type,></p>
+<h3 id="&#x8BED;&#x6CD5;&#x5206;&#x6790;">&#x8BED;&#x6CD5;&#x5206;&#x6790;</h3>
+<p>&#x5206;&#x8BCD;&#x9636;&#x6BB5;&#x5B8C;&#x6210;&#x4EE5;&#x540E;&#xFF0C;token&#x5E8F;&#x5217;&#x4F1A;&#x7ECF;&#x8FC7;&#x6211;&#x4EEC;&#x7684;&#x89E3;&#x6790;&#x5668;&#xFF0C;&#x7531;&#x89E3;&#x6790;&#x5668;&#x8BC6;&#x522B;&#x51FA;&#x4EE3;&#x7801;&#x4E2D;&#x7684;&#x5404;&#x7C7B;&#x77ED;&#x8BED;&#xFF0C;&#x4F1A;&#x6839;&#x636E;&#x8BED;&#x8A00;&#x7684;&#x6587;&#x6CD5;&#x89C4;&#x5219;(rules of grammar)&#x8F93;&#x51FA;&#x89E3;&#x6790;&#x6811;&#xFF0C;&#x8FD9;&#x68F5;&#x6811;&#x662F;&#x5BF9;&#x4EE3;&#x7801;&#x7684;&#x6811;&#x5F62;&#x63CF;&#x8FF0;&#x3002;&#x6587;&#x6CD5;&#x662F;&#x4EC0;&#x4E48;&#x5462;&#xFF1F;&#x53EF;&#x4EE5;&#x53C2;&#x8003;&#x8BED;&#x6587;&#x4E2D;&#x7684;&#x4E3B;&#x8C13;&#x5BBE;&#x5B9A;&#x72B6;&#x8865;&#xFF0C;&#x4E0D;&#x540C;&#x8BED;&#x8A00;&#x6709;&#x81EA;&#x5DF1;&#x7684;&#x6587;&#x6CD5;&#x7ED3;&#x6784;&#x548C;&#x89C4;&#x5219;&#x3002;</p>
+<h2 id="&#x7C7B;&#x578B;">&#x7C7B;&#x578B;</h2>
+<p>&#x4E0D;&#x540C;&#x7684;&#x8BED;&#x6CD5;&#x6709;&#x4E0D;&#x540C;&#x7684;ast&#x7C7B;&#x578B;&#xFF0C;ast&#x4EE5;&#x6709;&#x9650;&#x7684;&#x7C7B;&#x578B;&#x8868;&#x8FF0;&#x65E0;&#x7A77;&#x7684;&#x8868;&#x8FBE;</p>
+<h3 id="literal&#x5B57;&#x9762;&#x91CF;">Literal&#x5B57;&#x9762;&#x91CF;</h3>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/29185815036a4ea1878484ba773a3b6e~tplv-k3u1fbpfcp-watermark.awebp" alt=""></p>
+<h3 id="identifier&#x6807;&#x8BC6;&#x7B26;">Identifier&#x6807;&#x8BC6;&#x7B26;</h3>
+<p>&#x53D8;&#x91CF;&#x540D;&#x3001;&#x53C2;&#x6570;&#x540D;&#x3001;&#x5C5E;&#x6027;&#xFF0C;&#x53EF;&#x4EE5;&#x7406;&#x89E3;&#x4E3A;&#x5F15;&#x7528;&#x540D;</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9a4b54e6512a4da7ad5c99e7a61a62e9~tplv-k3u1fbpfcp-watermark.awebp" alt=""></p>
+<h3 id="statement&#x8BED;&#x53E5;">Statement&#x8BED;&#x53E5;</h3>
+<p>for/switch case/if/break&#x7B49;&#x7B49;</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d711045e21bb44b68495088df6a9a60b~tplv-k3u1fbpfcp-watermark.awebp" alt=""></p>
+<h3 id="declaration&#x58F0;&#x660E;">Declaration&#x58F0;&#x660E;</h3>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5303fa5530944a638d6b3d1af93f0e3f~tplv-k3u1fbpfcp-watermark.awebp" alt=""></p>
+<h3 id="expression">Expression</h3>
+<p>&#x8868;&#x8FBE;&#x5F0F;&#xFF08;&#x5BF9;&#x8C61;&#x548C;&#x6570;&#x7EC4;&#x5B57;&#x9762;&#x91CF;&#x4E5F;&#x90FD;&#x662F;&#x8868;&#x8FBE;&#x5F0F;&#xFF09;</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/feabcb940982409b911dcbb6066e8aa7~tplv-k3u1fbpfcp-watermark.awebp" alt="img"></p>
+<p>&#x6709;&#x4E9B;&#x8868;&#x8FBE;&#x5F0F;&#x53EF;&#x4EE5;&#x5355;&#x72EC;&#x5F53;&#x6210;&#x8BED;&#x53E5;&#xFF0C;&#x6709;&#x4E9B;&#x9700;&#x8981;&#x548C;&#x5176;&#x4ED6;&#x7C7B;&#x578B;&#x8282;&#x70B9;&#x4E00;&#x8D77;&#x6784;&#x6210;&#x8BED;&#x53E5;</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/07a3f1e392f649adb764ada46ee48602~tplv-k3u1fbpfcp-watermark.awebp" alt=""></p>
+<h3 id="class">Class</h3>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0c62ec375157488780e2beae39e7620d~tplv-k3u1fbpfcp-watermark.awebp" alt="img"></p>
+<h3 id="import">import</h3>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e501a0dfcce043c184e6320e22a4211c~tplv-k3u1fbpfcp-watermark.awebp" alt="img"></p>
+<h3 id="export">export</h3>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c3ccde25491e42199088fe1f050469ab~tplv-k3u1fbpfcp-watermark.awebp" alt="img"></p>
+<h2 id="ast-&#x7684;&#x516C;&#x5171;&#x5C5E;&#x6027;">AST &#x7684;&#x516C;&#x5171;&#x5C5E;&#x6027;</h2>
+<ul>
+<li>type&#xFF1A; AST &#x8282;&#x70B9;&#x7684;&#x7C7B;&#x578B;</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../babel介绍/" class="navigation navigation-prev " aria-label="Previous page: babel介绍">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../babel-ast/" class="navigation navigation-next " aria-label="Next page: 使用babel操作AST">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"AST介绍","level":"1.3","depth":1,"next":{"title":"使用babel操作AST","level":"1.4","depth":1,"path":"babel-ast/README.md","ref":"babel-ast/README.md","articles":[]},"previous":{"title":"babel介绍","level":"1.2","depth":1,"path":"babel介绍/README.md","ref":"babel介绍/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"AST介绍/README.md","mtime":"2021-08-12T10:52:42.661Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-08-12T11:08:34.134Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
